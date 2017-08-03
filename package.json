@@ -1,7 +1,7 @@
 {
   "name": "material-ui-master",
   "author": "Material-UI Team",
-  "version": "0.18.1",
+  "version": "0.18.7",
   "description": "React Components that Implement Google's Material Design.",
   "main": "./src/index.js",
   "keywords": [
@@ -37,7 +37,8 @@
     "test:integration": "cross-env NODE_ENV=test babel-node test/index.js integration",
     "test:integration:watch": "cross-env NODE_ENV=test babel-node test/watch.js integration",
     "test:unit": "cross-env NODE_ENV=test babel-node test/index.js unit",
-    "test:unit:watch": "cross-env NODE_ENV=test babel-node test/watch.js unit"
+    "test:unit:watch": "cross-env NODE_ENV=test babel-node test/watch.js unit",
+    "postpublish": "npm run build && cd build && npm publish"
   },
   "peerDependencies": {
     "react": "^15.4.0",
@@ -53,7 +54,7 @@
     "prop-types": "^15.5.7",
     "react-transition-group": "^1.1.2",
     "react-event-listener": "^0.4.5",
-    "recompose": "0.23.4",
+    "recompose": "0.24.0",
     "simple-assign": "^0.1.0",
     "warning": "^3.0.0"
   },
@@ -79,7 +80,7 @@
     "cross-env": "^4.0.0",
     "enzyme": "^2.8.1",
     "eslint": "^3.19.0",
-    "eslint-find-rules": "^1.14.3",
+    "eslint-find-rules": "^3.0.0",
     "eslint-plugin-babel": "^4.1.1",
     "eslint-plugin-flowtype": "^2.30.4",
     "eslint-plugin-import": "^2.2.0",

@@ -19,7 +19,7 @@ function getStyles(props, context) {
 
   const styles = {
     root: {
-      // Nested div bacause the List scales x faster than it scales y
+      // Nested div because the List scales x faster than it scales y
       zIndex: muiTheme.zIndex.menu,
       maxHeight: maxHeight,
       overflowY: maxHeight ? 'auto' : null,
@@ -373,7 +373,7 @@ class Menu extends Component {
         return;
       }
       const {primaryText} = child.props;
-      if (typeof primaryText === 'string' && new RegExp(`^${keys}`, 'i').test(primaryText)) {
+      if (typeof primaryText === 'string' && primaryText.substr(0, keys.length).toLowerCase() === keys.toLowerCase()) {
         foundIndex = index;
       }
     });

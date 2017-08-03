@@ -2,6 +2,7 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 import {assert} from 'chai';
+import {spy} from 'sinon';
 import ListItem from './ListItem';
 import EnhancedButton from '../internal/EnhancedButton';
 import getMuiTheme from '../styles/getMuiTheme';
@@ -76,6 +77,19 @@ describe('<ListItem />', () => {
     assert.strictEqual(wrapper.find(`.${testClass}`).length, 1, 'should have a div with the test class');
   });
 
+  it('should trigger onTouchTap handler when appropriate.', () => {
+    const onTouchTap = spy();
+    const wrapper = shallowWithContext(
+      <ListItem
+        onTouchTap={onTouchTap}
+      />
+    );
+    const primaryTextButton = wrapper.find(EnhancedButton);
+
+    primaryTextButton.simulate('touchTap', {stopPropagation: () => {}});
+    assert.strictEqual(onTouchTap.callCount, 1);
+  });
+
   describe('prop: primaryTogglesNestedList', () => {
     it('should toggle nested list when true', () => {
       const wrapper = shallowWithContext(
@@ -90,10 +104,10 @@ describe('<ListItem />', () => {
 
       assert.strictEqual(wrapper.find(NestedList).props().open, false);
 
-      primaryTextButton.simulate('touchTap', {stopPropagation: () => {}});
+      primaryTextButton.simulate('touchTap', {preventDefault: () => {}, stopPropagation: () => {}});
       assert.strictEqual(wrapper.find(NestedList).props().open, true);
 
-      primaryTextButton.simulate('touchTap', {stopPropagation: () => {}});
+      primaryTextButton.simulate('touchTap', {preventDefault: () => {}, stopPropagation: () => {}});
       assert.strictEqual(wrapper.find(NestedList).props().open, false);
     });
 
@@ -155,7 +169,7 @@ describe('<ListItem />', () => {
       );
 
       const primaryTextButton = wrapper.find(EnhancedButton);
-      primaryTextButton.simulate('touchTap', {stopPropagation: () => {}});
+      primaryTextButton.simulate('touchTap', {preventDefault: () => {}, stopPropagation: () => {}});
       assert.strictEqual(wrapper.find(NestedList).props().open, true);
     });
 
@@ -171,7 +185,7 @@ describe('<ListItem />', () => {
       );
 
       const primaryTextButton = wrapper.find(EnhancedButton);
-      primaryTextButton.simulate('touchTap', {stopPropagation: () => {}});
+      primaryTextButton.simulate('touchTap', {preventDefault: () => {}, stopPropagation: () => {}});
       assert.strictEqual(wrapper.find(NestedList).props().open, false);
     });
   });

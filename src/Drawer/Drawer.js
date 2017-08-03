@@ -140,6 +140,7 @@ class Drawer extends Component {
 
   componentWillUnmount() {
     this.disableSwipeHandling();
+    this.removeBodyTouchListeners();
   }
 
   getStyles() {
@@ -210,7 +211,7 @@ class Drawer extends Component {
       const width = parseFloat(this.props.width) / 100.0;
       // We are doing our best on the Server to render a consistent UI, hence the
       // default value of 10000
-      return window ? width * window.innerWidth : 10000;
+      return typeof window !== 'undefined' ? width * window.innerWidth : 10000;
     } else {
       return this.props.width;
     }
@@ -277,6 +278,12 @@ class Drawer extends Component {
     document.body.addEventListener('touchend', this.onBodyTouchEnd);
     document.body.addEventListener('touchcancel', this.onBodyTouchEnd);
   };
+
+  removeBodyTouchListeners() {
+    document.body.removeEventListener('touchmove', this.onBodyTouchMove);
+    document.body.removeEventListener('touchend', this.onBodyTouchEnd);
+    document.body.removeEventListener('touchcancel', this.onBodyTouchEnd);
+  }
 
   setPosition(translateX) {
     const rtlTranslateMultiplier = this.context.muiTheme.isRtl ? -1 : 1;
@@ -359,9 +366,7 @@ class Drawer extends Component {
       this.maybeSwiping = false;
     }
 
-    document.body.removeEventListener('touchmove', this.onBodyTouchMove);
-    document.body.removeEventListener('touchend', this.onBodyTouchEnd);
-    document.body.removeEventListener('touchcancel', this.onBodyTouchEnd);
+    this.removeBodyTouchListeners();
   };
 
   render() {

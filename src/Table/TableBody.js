@@ -291,7 +291,9 @@ class TableBody extends Component {
 
     if (this.props.selectable) {
       // Prevent text selection while selecting rows.
-      window.getSelection().removeAllRanges();
+      if (window.getSelection().rangeCount > 0 && window.getSelection().getRangeAt(0).getClientRects.length > 0) {
+        window.getSelection().removeAllRanges();
+      }
       this.processRowSelection(event, rowNumber);
     }
   };
@@ -421,12 +423,7 @@ class TableBody extends Component {
   };
 
   getColumnId(columnNumber) {
-    let columnId = columnNumber;
-    if (this.props.displayRowCheckbox) {
-      columnId--;
-    }
-
-    return columnId;
+    return columnNumber - 1;
   }
 
   render() {

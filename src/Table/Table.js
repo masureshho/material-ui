@@ -149,6 +149,12 @@ class Table extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.allRowsSelected !== nextProps.allRowsSelected) {
+      this.setState({allRowsSelected: nextProps.allRowsSelected});
+    }
+  }
+
   isScrollbarVisible() {
     const tableDivHeight = this.refs.tableDiv.clientHeight;
     const tableBodyHeight = this.refs.tableBody.clientHeight;
@@ -180,7 +186,6 @@ class Table extends Component {
         onRowHoverExit: this.onRowHoverExit,
         onRowSelection: this.onRowSelection,
         selectable: this.props.selectable,
-        style: Object.assign({height: this.props.height}, base.props.style),
       }
     );
   }

@@ -7,7 +7,6 @@ import propTypes from '../utils/propTypes';
 import Paper from '../Paper';
 import throttle from 'lodash.throttle';
 import PopoverAnimationDefault from './PopoverAnimationDefault';
-import {isIOS, getOffsetTop} from '../utils/iOSHelpers';
 
 const styles = {
   root: {
@@ -69,6 +68,14 @@ class Popover extends Component {
      */
     open: PropTypes.bool,
     /**
+     * Represents the parent scrollable container.
+     * It can be an element or a string like `window`.
+     */
+    scrollableContainer: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.string,
+    ]),
+    /**
      * Override the inline-styles of the root element.
      */
     style: PropTypes.object,
@@ -102,6 +109,7 @@ class Popover extends Component {
     canAutoPosition: true,
     onRequestClose: () => {},
     open: false,
+    scrollableContainer: 'window',
     style: {
       overflowY: 'auto',
     },
@@ -193,6 +201,7 @@ class Popover extends Component {
       style,
       targetOrigin,
       useLayerForClickAway, // eslint-disable-line no-unused-vars
+      scrollableContainer, // eslint-disable-line no-unused-vars
       ...other
     } = this.props;
 
@@ -235,8 +244,7 @@ class Popover extends Component {
     }
   }
 
-  componentClickAway = (event) => {
-    event.preventDefault();
+  componentClickAway = () => {
     this.requestClose('clickAway');
   };
 
@@ -254,14 +262,7 @@ class Popover extends Component {
     };
 
     a.right = rect.right || a.left + a.width;
-
-    // The fixed positioning isn't respected on iOS when an input is focused.
-    // We need to compute the position from the top of the page and not the viewport.
-    if (isIOS() && document.activeElement.tagName === 'INPUT') {
-      a.bottom = getOffsetTop(el) + a.height;
-    } else {
-      a.bottom = rect.bottom || a.top + a.height;
-    }
+    a.bottom = rect.bottom || a.top + a.height;
     a.middle = a.left + ((a.right - a.left) / 2);
     a.center = a.top + ((a.bottom - a.top) / 2);
 
@@ -313,8 +314,8 @@ class Popover extends Component {
       targetPosition = this.applyAutoPositionIfNeeded(anchor, target, targetOrigin, anchorOrigin, targetPosition);
     }
 
-    targetEl.style.top = `${Math.max(0, targetPosition.top)}px`;
-    targetEl.style.left = `${Math.max(0, targetPosition.left)}px`;
+    targetEl.style.top = `${targetPosition.top}px`;
+    targetEl.style.left = `${targetPosition.left}px`;
     targetEl.style.maxHeight = `${window.innerHeight}px`;
   };
 
@@ -404,7 +405,7 @@ class Popover extends Component {
     return (
       <div style={styles.root}>
         <EventListener
-          target="window"
+          target={this.props.scrollableContainer}
           onScroll={this.handleScroll}
           onResize={this.handleResize}
         />
